@@ -4,6 +4,6 @@ sealed class BmiEvent
 
 data class HeightChangeEvent(val height : Double) : BmiEvent()
 
-data class WeightChangeEvent(val weight : Int) : BmiEvent()
+data class WeightChangeEvent(val weight : Double) : BmiEvent()
 
-object UnitChangeEvent : BmiEvent()
+data class MeasurementTypeChangeEvent(val measurementType: MeasurementType):BmiEvent()

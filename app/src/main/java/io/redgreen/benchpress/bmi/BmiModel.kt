@@ -5,16 +5,16 @@ import kotlinx.android.parcel.Parcelize
 
 @Parcelize
 data class BmiModel(
-    var height: Int,
-    var weight: Int,
+    var height: Double,
+    var weight: Double,
     var bmi: Double,
     var measurementType: MeasurementType,
     var weightCategory: WeightCategory
 ) : Parcelable {
     companion object {
         val DEFAULT = BmiModel(
-            height = 176,
-            weight = 74,
+            height = 176.0,
+            weight = 74.0,
             bmi = 12.3,//// TODO(ns) 25/Feb/19 - fix this
             measurementType = MeasurementType.METRIC,
             weightCategory = WeightCategory.NORMAL_WEIGHT
@@ -30,17 +30,19 @@ data class BmiModel(
     }
 
 
-    fun heightChange(height: Int) {
+    fun changeHeight(height: Double): BmiModel {
         copy(height = height)
         calculateBMI()
+        return this;
     }
 
-    fun weightChange(weight: Int) {
+    fun changeWeight(weight: Double): BmiModel {
         copy(weight = weight)
         calculateBMI()
+        return this;
     }
 
-    fun unitChange(measurementType: MeasurementType): BmiModel =
+    fun changeMeasurementType(measurementType: MeasurementType): BmiModel =
         copy(measurementType = measurementType)
 
 }

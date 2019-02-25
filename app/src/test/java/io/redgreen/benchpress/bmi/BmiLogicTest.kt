@@ -1,24 +1,23 @@
 package io.redgreen.benchpress.bmi
 
-import com.spotify.mobius.test.NextMatchers.hasModel
-import com.spotify.mobius.test.NextMatchers.hasNoEffects
+import com.spotify.mobius.test.NextMatchers.*
 import com.spotify.mobius.test.UpdateSpec
 import com.spotify.mobius.test.UpdateSpec.assertThatNext
 import org.junit.Test
 
-class BmiLogicTest{
-    private val updateSpec = UpdateSpec<BmiModel, BmiEvent, Nothing>(BmiLogic::update)
+class BmiLogicTest {
+    private val updateSpec = UpdateSpec<BmiModel, BmiEvent, BMIEffect>(BmiLogic::update)
 
     @Test
-    fun `when user slides the height seekbar`(){
-        val normalModel = BmiModel.DEFAULT
-//        val height = 1.80
+    fun `when can change Height`() {
+        val defaultModel = BmiModel.DEFAULT
+        val randomHeight = 176.3;
         updateSpec
-            .given(normalModel)
-            .`when`(HeightChangeEvent(height))
+            .given(defaultModel)
+            .`when`(HeightChangeEvent(randomHeight))
             .then(
                 assertThatNext(
-                    hasModel(normalModel.heightChange(height)),
+                    hasModel(defaultModel.changeHeight(randomHeight)),
                     hasNoEffects()
                 )
             )
@@ -26,32 +25,46 @@ class BmiLogicTest{
     }
 
     @Test
-    fun `when user slides the weight seekbar`(){
-        val normalModel = BmiModel.DEFAULT
-        val weight = 72
-        updateSpec
-            .given(normalModel)
-            .`when`(WeightChangeEvent(weight))
+    fun `user can change weight`() {
+        val defaultModel = BmiModel.DEFAULT
+        val validWeight = 80.5
+        updateSpec.given(defaultModel)
+            .`when`(WeightChangeEvent(validWeight))
             .then(
                 assertThatNext(
-                    hasModel(normalModel.weightChange(weight)),
+                    hasModel(defaultModel.changeWeight(validWeight)),
                     hasNoEffects()
                 )
             )
     }
 
     @Test
-    fun `when user changes unit to si unit from non si unit`(){
-        val normalModel = BmiModel.DEFAULT
-
-        updateSpec
-            .given(normalModel)
-            .`when`(UnitChangeEvent)
+    fun `user can change measurementType`() {
+        val defaultModel = BmiModel.DEFAULT
+        val standardUnit = MeasurementType.STANDARD
+        updateSpec.given(defaultModel)
+            .`when`(MeasurementTypeChangeEvent(standardUnit))
             .then(
                 assertThatNext(
-                    hasModel(normalModel.unitChange()),
+                    hasModel(defaultModel.changeMeasurementType(standardUnit)),
                     hasNoEffects()
                 )
             )
     }
+
+
+    @Test
+    fun `invalid weight has side effect`() {
+        val defaultModel = BmiModel.DEFAULT
+        val inValidWeight = 1.20
+        updateSpec.given(defaultModel)
+            .`when`(HeightChangeEvent(inValidWeight))
+            .then(
+                assertThatNext(
+                    hasModel(defaultModel),
+                    hasEffects(InvalidWeightEffect(2.3) as BMIEffect)
+                )
+            )
+    }
+
 }
