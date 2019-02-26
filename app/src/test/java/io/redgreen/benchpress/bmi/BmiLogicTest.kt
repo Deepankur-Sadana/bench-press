@@ -6,7 +6,7 @@ import com.spotify.mobius.test.UpdateSpec.assertThatNext
 import org.junit.Test
 
 class BmiLogicTest {
-    private val updateSpec = UpdateSpec<BmiModel, BmiEvent, BMIEffect>(BmiLogic::update)
+    private val updateSpec = UpdateSpec<BmiModel, BmiEvent, Nothing>(BmiLogic::update)
 
     @Test
     fun `when can change Height`() {
@@ -62,7 +62,7 @@ class BmiLogicTest {
             .then(
                 assertThatNext(
                     hasModel(defaultModel),
-                    hasEffects(InvalidWeightEffect(2.3) as BMIEffect)
+                    hasNoEffects()
                 )
             )
     }
