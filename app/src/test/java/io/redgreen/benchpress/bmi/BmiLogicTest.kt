@@ -11,7 +11,7 @@ class BmiLogicTest {
     @Test
     fun `when can change Height`() {
         val defaultModel = BmiModel.DEFAULT
-        val randomHeight = 176.3;
+        val randomHeight = 176.3f;
         updateSpec
             .given(defaultModel)
             .`when`(HeightChangeEvent(randomHeight))
@@ -27,7 +27,7 @@ class BmiLogicTest {
     @Test
     fun `user can change weight`() {
         val defaultModel = BmiModel.DEFAULT
-        val validWeight = 80.5
+        val validWeight = 80.5f
         updateSpec.given(defaultModel)
             .`when`(WeightChangeEvent(validWeight))
             .then(
@@ -41,7 +41,7 @@ class BmiLogicTest {
     @Test
     fun `user can change measurementType`() {
         val defaultModel = BmiModel.DEFAULT
-        val standardUnit = MeasurementType.STANDARD
+        val standardUnit = MeasurementUnit.STANDARD
         updateSpec.given(defaultModel)
             .`when`(MeasurementTypeChangeEvent(standardUnit))
             .then(
@@ -56,7 +56,7 @@ class BmiLogicTest {
     @Test
     fun `invalid weight has side effect`() {
         val defaultModel = BmiModel.DEFAULT
-        val inValidWeight = 1.20
+        val inValidWeight = 1.20f
         updateSpec.given(defaultModel)
             .`when`(HeightChangeEvent(inValidWeight))
             .then(

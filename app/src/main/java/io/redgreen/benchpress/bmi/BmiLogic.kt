@@ -12,7 +12,7 @@ object BmiLogic : Update<BmiModel, BmiEvent, Nothing> {
         return when (event) {
             is HeightChangeEvent -> next(model.changeHeight(event.height))
             is WeightChangeEvent -> next(model.changeWeight(event.weight))
-            is MeasurementTypeChangeEvent -> next(model.changeMeasurementType(event.measurementType))
+            is MeasurementTypeChangeEvent -> next(model.changeMeasurementType(event.measurementUnit))
         }
     }
 }

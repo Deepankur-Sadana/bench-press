@@ -1,6 +1,6 @@
 package io.redgreen.benchpress.bmi
 
-enum class MeasurementType {
+enum class MeasurementUnit {
     STANDARD//pounds, inches
     ,METRIC//cm, KG
 }
