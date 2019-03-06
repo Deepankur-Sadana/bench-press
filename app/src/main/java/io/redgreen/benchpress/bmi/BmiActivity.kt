@@ -16,7 +16,8 @@ import timber.log.Timber
 
 class BmiActivity : BaseActivity<BmiModel, BmiEvent, Nothing>(), BmiView {
 
-    private val MAX_VALUE = 220
+
+    private val MAX_VALUE = 400
     private val MIN_VALUE = 50
 
     private val renderer by lazy(LazyThreadSafetyMode.NONE) {
@@ -96,9 +97,16 @@ class BmiActivity : BaseActivity<BmiModel, BmiEvent, Nothing>(), BmiView {
 
 
     override fun render(model: BmiModel) {
+        renderer.render(model)
+    }
+
+    override fun renderBmi(bmi: Float) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
+    override fun renderWeightCategory(weightCategory: WeightCategory) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
     override fun effectHandler(): ObservableTransformer<Nothing, BmiEvent> {
         return NoOpEffectHandler()
     }
