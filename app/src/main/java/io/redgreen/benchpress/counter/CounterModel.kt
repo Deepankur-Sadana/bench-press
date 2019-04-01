@@ -9,4 +9,7 @@ data class CounterModel(
 
     fun increment(): CounterModel =
         copy(counter = counter + 1)
+
+    fun decrement(): CounterModel =
+        copy(counter = counter - 1)
 }
