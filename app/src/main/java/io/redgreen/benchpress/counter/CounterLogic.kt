@@ -23,7 +23,9 @@ fun fizzBuzzEffectFunction(): ZzzEffectFunction {
     return {
         when {
             it == 0 -> null
+            it % 15 == 0 -> FizzBuzzEffect
             it % 3 == 0 -> FizzEffect
+            it % 5 == 0 -> BuzzEffect
             else -> null
         }
     }
