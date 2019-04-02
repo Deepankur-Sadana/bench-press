@@ -40,16 +40,16 @@ class CounterLogicTest {
     }
 
     @Test
-    fun `when counter is a multiple of 3, then show fizz`() {
-        val two = CounterModel.with(2)
+    fun `when counter is a multiple of 15, then show fizz buzz`() {
+        val fourteen = CounterModel.with(14)
 
         updateSpec
-            .given(two)
+            .given(fourteen)
             .`when`(IncrementEvent)
             .then(
                 assertThatNext(
-                    hasModel(two.increment()),
-                    hasEffects(FizzEffect as ZzzEffect)
+                    hasModel(fourteen.increment()),
+                    hasEffects(FizzBuzzEffect as ZzzEffect)
                 )
             )
     }

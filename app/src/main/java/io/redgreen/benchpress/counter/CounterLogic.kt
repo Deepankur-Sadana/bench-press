@@ -11,10 +11,18 @@ class CounterLogic(
         model: CounterModel,
         event: CounterEvent
     ): Next<CounterModel, ZzzEffect> {
-        return if (event is IncrementEvent) {
-            next(model.increment())
+        val updatedModel = if (event is IncrementEvent) {
+            model.increment()
         } else {
-            next(model.decrement())
+            model.decrement()
+        }
+
+        val effect = effectFunction(updatedModel.counter)
+
+        return if (effect != null) {
+            next(updatedModel, setOf(effect))
+        } else {
+            next(updatedModel)
         }
     }
 }
