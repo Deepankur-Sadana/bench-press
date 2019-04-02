@@ -20,5 +20,11 @@ object CounterLogic : Update<CounterModel, CounterEvent, ZzzEffect> {
 typealias ZzzEffectFunction = (Int) -> ZzzEffect?
 
 fun fizzBuzzEffectFunction(): ZzzEffectFunction {
-    return { null }
+    return {
+        when {
+            it == 0 -> null
+            it % 3 == 0 -> FizzEffect
+            else -> null
+        }
+    }
 }
