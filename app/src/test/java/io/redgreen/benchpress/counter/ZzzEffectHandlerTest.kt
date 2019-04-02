@@ -9,13 +9,11 @@ import io.redgreen.benchpress.test.ImmediateSchedulersProvider
 import org.junit.Test
 
 class ZzzEffectHandlerTest {
+    private val actions = mock<CounterActions>()
+    private val effectHandlerTestCase = EffectHandlerTestCase(ZzzEffectHandler.create(actions, ImmediateSchedulersProvider()))
+
     @Test
     fun `it can dispatch a fizz action`() {
-        // given
-        val actions = mock<CounterActions>()
-        val effectHandler = ZzzEffectHandler.create(actions, ImmediateSchedulersProvider())
-        val effectHandlerTestCase = EffectHandlerTestCase(effectHandler)
-
         // when
         effectHandlerTestCase.dispatchEffect(FizzEffect)
 
@@ -23,6 +21,30 @@ class ZzzEffectHandlerTest {
         effectHandlerTestCase.assertNoOutgoingEvents()
 
         verify(actions).showFizz()
+        verifyNoMoreInteractions(actions)
+    }
+
+    @Test
+    fun `it can dispatch a buzz effect`() {
+        //when
+        effectHandlerTestCase.dispatchEffect(BuzzEffect)
+
+        //then
+        effectHandlerTestCase.assertNoOutgoingEvents()
+
+        verify(actions).showBuzz()
+        verifyNoMoreInteractions(actions)
+    }
+
+    @Test
+    fun `it can dispatch a fizzBuzz effect`() {
+        //when
+        effectHandlerTestCase.dispatchEffect(FizzBuzzEffect)
+
+        //then
+        effectHandlerTestCase.assertNoOutgoingEvents()
+
+        verify(actions).showFizzBuzz()
         verifyNoMoreInteractions(actions)
     }
 }
