@@ -4,7 +4,9 @@ import com.spotify.mobius.Next
 import com.spotify.mobius.Next.next
 import com.spotify.mobius.Update
 
-object CounterLogic : Update<CounterModel, CounterEvent, ZzzEffect> {
+class CounterLogic(
+    private val effectFunction: ZzzEffectFunction
+) : Update<CounterModel, CounterEvent, ZzzEffect> {
     override fun update(
         model: CounterModel,
         event: CounterEvent

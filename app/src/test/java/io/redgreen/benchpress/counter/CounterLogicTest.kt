@@ -6,7 +6,8 @@ import com.spotify.mobius.test.UpdateSpec.assertThatNext
 import org.junit.Test
 
 class CounterLogicTest {
-    private val updateSpec = UpdateSpec<CounterModel, CounterEvent, ZzzEffect>(CounterLogic::update)
+    private val update = CounterLogic(fizzBuzzEffectFunction())::update
+    private val updateSpec = UpdateSpec<CounterModel, CounterEvent, ZzzEffect>(update)
 
     @Test
     fun `when user taps on plus, increment counter`() {
@@ -39,7 +40,7 @@ class CounterLogicTest {
     }
 
     @Test
-    fun `when counter is a multiple of 3, then show Fizz`() {
+    fun `when counter is a multiple of 3, then show fizz`() {
         val two = CounterModel.with(2)
 
         updateSpec

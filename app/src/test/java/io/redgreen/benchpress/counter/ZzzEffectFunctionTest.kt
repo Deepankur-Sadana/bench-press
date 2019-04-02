@@ -37,7 +37,7 @@ class ZzzEffectFunctionTest {
     }
 
     @Test
-    fun `it returns fizzbuzz effect for multiples of 15`() {
+    fun `it returns fizz buzz effect for multiples of 15`() {
         //when
         val effect = effectFunction(15)
 
