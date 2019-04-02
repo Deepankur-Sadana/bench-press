@@ -16,3 +16,9 @@ object CounterLogic : Update<CounterModel, CounterEvent, ZzzEffect> {
         }
     }
 }
+
+typealias ZzzEffectFunction = (Int) -> ZzzEffect?
+
+fun fizzBuzzEffectFunction(): ZzzEffectFunction {
+    return { null }
+}
