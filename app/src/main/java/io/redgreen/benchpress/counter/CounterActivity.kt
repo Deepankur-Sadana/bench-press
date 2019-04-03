@@ -15,6 +15,10 @@ class CounterActivity :
     BaseActivity<CounterModel, CounterEvent, ZzzEffect>(),
     CounterActions {
 
+    private val counterLogic by lazy(LazyThreadSafetyMode.NONE) {
+        CounterLogic(fizzBuzzEffectFunction())
+    }
+
     override fun layoutResId(): Int {
         return R.layout.counter_activity
     }
@@ -38,7 +42,7 @@ class CounterActivity :
         model: CounterModel,
         event: CounterEvent
     ): Next<CounterModel, ZzzEffect> {
-        TODO()
+        return counterLogic.update(model, event)
     }
 
     override fun render(model: CounterModel) {
