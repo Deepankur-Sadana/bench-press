@@ -7,3 +7,5 @@ object FizzEffect : ZzzEffect()
 object BuzzEffect : ZzzEffect()
 
 object FizzBuzzEffect : ZzzEffect()
+
+object SsshEffect : ZzzEffect()

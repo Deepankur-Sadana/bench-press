@@ -16,7 +16,12 @@ class CounterActivity :
     CounterActions {
 
     private val counterLogic by lazy(LazyThreadSafetyMode.NONE) {
-        CounterLogic(fizzBuzzEffectFunction())
+        CounterLogic(fizzBuzzEffectFunction(
+            ssshEffect(),
+            fizzBuzzEffect(),
+            fizzEffect(),
+            buzzEffect()
+        ))
     }
 
     override fun layoutResId(): Int {

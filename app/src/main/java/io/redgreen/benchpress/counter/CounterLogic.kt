@@ -29,14 +29,24 @@ class CounterLogic(
 
 typealias ZzzEffectFunction = (Int) -> ZzzEffect?
 
-fun fizzBuzzEffectFunction(): ZzzEffectFunction {
+fun fizzBuzzEffectFunction(
+    vararg effectFunctions: ZzzEffectFunction
+): ZzzEffectFunction {
     return {
-        when {
-            it == 0 -> null
-            it % 15 == 0 -> FizzBuzzEffect
-            it % 3 == 0 -> FizzEffect
-            it % 5 == 0 -> BuzzEffect
-            else -> null
-        }
+        effectFunctions
+            .map { effectFunction -> effectFunction(it) }
+            .firstOrNull { it != null }
     }
 }
+
+fun ssshEffect(): ZzzEffectFunction =
+    { if (it == 0) SsshEffect else null }
+
+fun fizzBuzzEffect(): ZzzEffectFunction =
+    { if (it % 15 == 0) { FizzBuzzEffect } else { null } }
+
+fun fizzEffect(): ZzzEffectFunction =
+    { if (it % 3 == 0) { FizzEffect } else { null } }
+
+fun buzzEffect(): ZzzEffectFunction =
+    { if (it % 5 == 0) { BuzzEffect } else { null } }

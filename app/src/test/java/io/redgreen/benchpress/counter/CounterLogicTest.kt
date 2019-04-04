@@ -6,7 +6,7 @@ import com.spotify.mobius.test.UpdateSpec.assertThatNext
 import org.junit.Test
 
 class CounterLogicTest {
-    private val update = CounterLogic(fizzBuzzEffectFunction())::update
+    private val update = CounterLogic(fizzBuzzEffectFunction(ssshEffect(), fizzBuzzEffect(), fizzEffect(), buzzEffect()))::update
     private val updateSpec = UpdateSpec<CounterModel, CounterEvent, ZzzEffect>(update)
 
     @Test

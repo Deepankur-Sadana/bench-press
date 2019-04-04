@@ -4,7 +4,12 @@ import com.google.common.truth.Truth.assertThat
 import org.junit.Test
 
 class ZzzEffectFunctionTest {
-    private val effectFunction = fizzBuzzEffectFunction()
+    private val effectFunction = fizzBuzzEffectFunction(
+        ssshEffect(),
+        fizzBuzzEffect(),
+        fizzEffect(),
+        buzzEffect()
+    )
 
     @Test
     fun `it returns a null effect for 0`() {
@@ -13,7 +18,7 @@ class ZzzEffectFunctionTest {
 
         // then
         assertThat(effect)
-            .isNull()
+            .isEqualTo(SsshEffect)
     }
 
     @Test
