@@ -24,6 +24,8 @@ data class UserRepoModel(
     fun userNameCleared(): UserRepoModel =
         copy(userName = UserName(""))
 
-    fun searchFollowersName(): UserRepoModel =
+    fun searchFollowers(): UserRepoModel =
             copy(searcFollowersAsyncOp = AsyncOp.IN_FLIGHT)
+
+    fun unableToFetchFollowers(): UserRepoModel = copy(searcFollowersAsyncOp = AsyncOp.FAILED)
 }

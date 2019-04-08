@@ -78,8 +78,24 @@ class UserRepoLogicTest {
             .`when`(SearchFollowersEvent)
             .then(
                 assertThatNext(
-                    hasModel(validModel.searchFollowersName()),
+                    hasModel(validModel.searchFollowers()),
                     hasEffects(SearchFollowersEffect(validUserName) as UserRepoEffect)
+                )
+            )
+    }
+
+    @Test
+    fun `when search followers api fails, then show error `() {
+        val searchingModel = blankModel.
+            userNameChanged(validUserName).
+            searchFollowers()
+
+        updateSpec.given(searchingModel)
+            .`when`(UnableToFetchFollowersEvent)
+            .then(
+                assertThatNext(
+                    hasModel(searchingModel.unableToFetchFollowers()),
+                    hasNoEffects()
                 )
             )
     }
