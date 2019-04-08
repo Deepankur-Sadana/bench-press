@@ -6,6 +6,6 @@ import kotlinx.android.parcel.Parcelize
 @Parcelize
 data class UserName (val name: String) : Parcelable {
     fun isValid(): Boolean {
-        return !name.isEmpty()
+        return name.isNotBlank()
     }
 }

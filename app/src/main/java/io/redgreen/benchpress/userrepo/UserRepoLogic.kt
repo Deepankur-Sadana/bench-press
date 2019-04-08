@@ -14,8 +14,8 @@ object UserRepoLogic : Update<UserRepoModel, UserRepoEvent, UserRepoEffect> {
 
         return when(event){
             is UserNameChangeEvent -> next(model.userNameChanged(event.userName))
-//            is EmailChangedEvent -> next(model.emailChanged(event.value))
-
+            is UserNameClearedEvent -> next(model.userNameCleared())
+            else -> TODO()
         }
     }
 

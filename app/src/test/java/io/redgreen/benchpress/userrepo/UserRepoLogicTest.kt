@@ -9,12 +9,11 @@ import org.junit.Test
 
 
 class UserRepoLogicTest {
-
     private val updateSpec = UpdateSpec<UserRepoModel, UserRepoEvent, UserRepoEffect>(UserRepoLogic::update)
     private val blankModel = UserRepoModel.BLANK
 
     @Test
-    fun `disable search button when invalid username is entered`() {
+    fun `when username is invalid, then user cannot search`() {
         val invalidUserName = ""
         val invalidModel = blankModel
             .userNameChanged(invalidUserName)
@@ -27,12 +26,13 @@ class UserRepoLogicTest {
                     hasNoEffects()
                 )
             )
+
         assertThat(invalidModel.isReadyToSearch)
             .isFalse()
     }
-    
+
     @Test
-    fun `enable search button when valid username is entered`() {
+    fun `when username is valid, then user can search`() {
         val validUserName = "Deepankur-Sadana"
 
         val validModel = blankModel
@@ -50,6 +50,23 @@ class UserRepoLogicTest {
             .isTrue()
     }
 
+    @Test
+    fun `when user clears username, then user cannot search`() {
+        val hasUsernameState = blankModel
+            .userNameChanged("Deepankur-Sadana")
+        val noUsernameState = hasUsernameState.userNameCleared()
 
+        updateSpec
+            .given(hasUsernameState)
+            .`when`(UserNameClearedEvent)
+            .then(
+                assertThatNext(
+                    hasModel(noUsernameState),
+                    hasNoEffects()
+                )
+            )
 
+        assertThat(noUsernameState.isReadyToSearch)
+            .isFalse()
+    }
 }
