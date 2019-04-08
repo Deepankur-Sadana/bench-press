@@ -10,7 +10,7 @@ import org.junit.Test
 class UserRepoLogicTest {
     private val updateSpec = UpdateSpec<UserRepoModel, UserRepoEvent, UserRepoEffect>(UserRepoLogic::update)
     private val blankModel = UserRepoModel.BLANK
-    val validUserName = "Deepankur-Sadana"
+    private val validUserName = "Deepankur-Sadana"
 
     @Test
     fun `when username is invalid, then user cannot search`() {
@@ -33,7 +33,6 @@ class UserRepoLogicTest {
 
     @Test
     fun `when username is valid, then user can search`() {
-
         val validModel = blankModel
             .userNameChanged(validUserName)
 
@@ -70,7 +69,7 @@ class UserRepoLogicTest {
     }
 
     @Test
-    fun `when user taps on Search then show loader`() {
+    fun `when user taps on search then show loader`() {
         val validModel = blankModel
             .userNameChanged(validUserName)
 
@@ -78,8 +77,24 @@ class UserRepoLogicTest {
             .`when`(SearchFollowersEvent)
             .then(
                 assertThatNext(
-                    hasModel(validModel.searchFollowersName()),
+                    hasModel(validModel.searchFollowers()),
                     hasEffects(SearchFollowersEffect(validUserName) as UserRepoEffect)
+                )
+            )
+    }
+
+    @Test
+    fun `when search followers api fails, then show error`() {
+        val searchingModel = blankModel.
+            userNameChanged(validUserName).
+            searchFollowers()
+
+        updateSpec.given(searchingModel)
+            .`when`(UnableToFetchFollowersEvent)
+            .then(
+                assertThatNext(
+                    hasModel(searchingModel.unableToFetchFollowers()),
+                    hasNoEffects()
                 )
             )
     }
