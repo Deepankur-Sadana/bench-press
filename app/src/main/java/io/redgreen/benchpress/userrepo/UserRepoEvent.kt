@@ -4,3 +4,4 @@ sealed class UserRepoEvent
 
 data class UserNameChangeEvent(val userName: String) : UserRepoEvent()
 object UserNameClearedEvent : UserRepoEvent()
+object SearchFollowersEvent : UserRepoEvent()

@@ -1,8 +1,7 @@
 package io.redgreen.benchpress.userrepo
 
 import com.google.common.truth.Truth.assertThat
-import com.spotify.mobius.test.NextMatchers.hasModel
-import com.spotify.mobius.test.NextMatchers.hasNoEffects
+import com.spotify.mobius.test.NextMatchers.*
 import com.spotify.mobius.test.UpdateSpec
 import com.spotify.mobius.test.UpdateSpec.assertThatNext
 import org.junit.Test
@@ -11,6 +10,7 @@ import org.junit.Test
 class UserRepoLogicTest {
     private val updateSpec = UpdateSpec<UserRepoModel, UserRepoEvent, UserRepoEffect>(UserRepoLogic::update)
     private val blankModel = UserRepoModel.BLANK
+    val validUserName = "Deepankur-Sadana"
 
     @Test
     fun `when username is invalid, then user cannot search`() {
@@ -33,7 +33,6 @@ class UserRepoLogicTest {
 
     @Test
     fun `when username is valid, then user can search`() {
-        val validUserName = "Deepankur-Sadana"
 
         val validModel = blankModel
             .userNameChanged(validUserName)
@@ -68,5 +67,20 @@ class UserRepoLogicTest {
 
         assertThat(noUsernameState.isReadyToSearch)
             .isFalse()
+    }
+
+    @Test
+    fun `when user taps on Search then show loader`() {
+        val validModel = blankModel
+            .userNameChanged(validUserName)
+
+        updateSpec.given(validModel)
+            .`when`(SearchFollowersEvent)
+            .then(
+                assertThatNext(
+                    hasModel(validModel.searchFollowersName()),
+                    hasEffects(SearchFollowersEffect(validUserName) as UserRepoEffect)
+                )
+            )
     }
 }
