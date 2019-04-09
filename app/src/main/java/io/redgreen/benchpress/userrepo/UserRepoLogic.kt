@@ -27,5 +27,4 @@ object UserRepoLogic : Update<UserRepoModel, UserRepoEvent, UserRepoEffect> {
             else -> TODO()
         }
     }
-
 }
