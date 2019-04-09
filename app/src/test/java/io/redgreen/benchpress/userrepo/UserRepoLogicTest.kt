@@ -113,4 +113,17 @@ class UserRepoLogicTest {
                 )
             )
     }
+
+    @Test
+    fun `when user no found, show no user found view`() {
+        val searchingModel = blankModel.userNameChanged(validUserName).searchFollowers()
+
+        updateSpec
+            .given(searchingModel)
+            .`when`(UserNotFoundEvent)
+            .then(assertThatNext(
+                hasModel(searchingModel.userNotFound()),
+                hasNoEffects()
+            ))
+    }
 }

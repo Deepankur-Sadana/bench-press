@@ -19,6 +19,7 @@ object UserRepoLogic : Update<UserRepoModel, UserRepoEvent, UserRepoEffect> {
             )
             is UnableToFetchFollowersEvent -> next(model.unableToFetchFollowers())
             is NoFollowersFoundEvent -> next(model.noFollowersFound())
+            is UserNotFoundEvent -> next(model.userNotFound())
             else -> TODO()
         }
     }
