@@ -126,4 +126,18 @@ class UserRepoLogicTest {
                 hasNoEffects()
             ))
     }
+
+    @Test
+    fun `when user's followers list is found, then show followers`() {
+        val searchingModel = blankModel.userNameChanged(validUserName).searchFollowers()
+
+        val followers = listOf(User("Deepankur", "someurl"))
+        updateSpec
+            .given(searchingModel)
+            .`when`(FollowersFetchedEvent(followers))
+            .then(assertThatNext(
+                hasModel(searchingModel.followersListFetched(followers)),
+                hasNoEffects()
+            ))
+    }
 }

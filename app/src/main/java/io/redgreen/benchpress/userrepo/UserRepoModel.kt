@@ -39,4 +39,8 @@ data class UserRepoModel(
 
     fun userNotFound(): UserRepoModel =
         copy(searchFollowersAsyncOp = SUCCEEDED, error = USER_NOT_FOUND)
+
+    fun followersListFetched(followers: List<User>): UserRepoModel =
+        copy(searchFollowersAsyncOp = SUCCEEDED,followers = followers)
+
 }
