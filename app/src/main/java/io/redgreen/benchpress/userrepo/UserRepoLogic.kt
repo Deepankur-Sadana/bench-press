@@ -11,7 +11,7 @@ object UserRepoLogic : Update<UserRepoModel, UserRepoEvent, UserRepoEffect> {
         event: UserRepoEvent
     ): Next<UserRepoModel, UserRepoEffect> {
 
-        return when(event){
+        return when (event) {
             is UserNameChangeEvent -> next(model.userNameChanged(event.userName))
             is UserNameClearedEvent -> next(model.userNameCleared())
             is SearchFollowersEvent -> next(
@@ -21,6 +21,9 @@ object UserRepoLogic : Update<UserRepoModel, UserRepoEvent, UserRepoEffect> {
             is NoFollowersFoundEvent -> next(model.noFollowersFound())
             is UserNotFoundEvent -> next(model.userNotFound())
             is FollowersFetchedEvent -> next(model.followersListFetched(event.followers))
+            is RetryFetchFollowersEvent -> next(
+                model.searchFollowers(), setOf(SearchFollowersEffect(model.userName.name))
+            )
             else -> TODO()
         }
     }

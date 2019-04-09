@@ -140,4 +140,20 @@ class UserRepoLogicTest {
                 hasNoEffects()
             ))
     }
+    @Test
+    fun `when user retries, show the loader`() {
+        val unableToFetchFollowersModel = blankModel
+            .userNameChanged(validUserName)
+            .searchFollowers()
+            .unableToFetchFollowers()
+
+        updateSpec
+            .given(unableToFetchFollowersModel)
+            .`when`(RetryFetchFollowersEvent)
+            .then(assertThatNext(
+                hasModel(unableToFetchFollowersModel.searchFollowers()),
+                hasEffects(SearchFollowersEffect(validUserName) as UserRepoEffect)
+
+            ))
+    }
 }
