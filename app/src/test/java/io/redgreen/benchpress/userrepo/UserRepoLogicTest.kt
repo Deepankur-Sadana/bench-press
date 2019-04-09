@@ -98,4 +98,19 @@ class UserRepoLogicTest {
                 )
             )
     }
+
+    @Test
+    fun `when no followers are fetched, display no followers widget`() {
+        val searchingModel = blankModel.userNameChanged(validUserName).searchFollowers()
+
+        updateSpec
+            .given(searchingModel)
+            .`when`(NoFollowersFoundEvent)
+            .then(
+                assertThatNext(
+                    hasModel(searchingModel.noFollowersFound()),
+                    hasNoEffects()
+                )
+            )
+    }
 }

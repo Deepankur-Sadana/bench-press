@@ -7,12 +7,13 @@ import kotlinx.android.parcel.Parcelize
 @Parcelize
 data class UserRepoModel(
     val userName: UserName,
-    val searcFollowersAsyncOp: AsyncOp
+    val searchFollowersAsyncOp: AsyncOp,
+    val hasFollowers: Boolean = false
 ) : Parcelable {
     companion object {
         val BLANK = UserRepoModel(
             userName = UserName(""),
-            searcFollowersAsyncOp = AsyncOp.IDLE
+            searchFollowersAsyncOp = AsyncOp.IDLE
         )
     }
 
@@ -25,7 +26,11 @@ data class UserRepoModel(
         copy(userName = UserName(""))
 
     fun searchFollowers(): UserRepoModel =
-            copy(searcFollowersAsyncOp = AsyncOp.IN_FLIGHT)
+            copy(searchFollowersAsyncOp = AsyncOp.IN_FLIGHT)
 
-    fun unableToFetchFollowers(): UserRepoModel = copy(searcFollowersAsyncOp = AsyncOp.FAILED)
+    fun unableToFetchFollowers(): UserRepoModel = copy(searchFollowersAsyncOp = AsyncOp.FAILED)
+
+    fun noFollowersFound(): UserRepoModel =
+        copy(searchFollowersAsyncOp = AsyncOp.SUCCEEDED, hasFollowers = false)
+
 }
