@@ -6,7 +6,11 @@ class UserRepoViewRenderer(
     private val view: UserRepoView
 ) {
     fun render(model: UserRepoModel) {
-        view.disableSearchButton()
-        view.showBlankMessage()
+        if (model == UserRepoModel.BLANK) {
+            view.disableSearchButton()
+            view.showBlankMessage()
+        } else if (model.isReadyToSearch) {
+            view.enableSearchButton()
+        }
     }
 }
