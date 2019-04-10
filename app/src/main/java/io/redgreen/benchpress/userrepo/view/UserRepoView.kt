@@ -17,4 +17,5 @@ interface UserRepoView {
     fun showFollowers(followers: List<User>)
     fun shoNoFollowersFoundMessage()
     fun showUserNotFoundMessage()
+    fun showRetryMessage()
 }

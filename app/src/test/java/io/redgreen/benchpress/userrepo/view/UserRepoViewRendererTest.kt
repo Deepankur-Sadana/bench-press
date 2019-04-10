@@ -124,4 +124,24 @@ class UserRepoViewRendererTest {
         verifyNoMoreInteractions(view)
 
     }
+
+    @Test
+    fun `it can render unknown error state`() {
+        //given
+        val unknownErrorModel  = UserRepoModel.BLANK
+            .userNameChanged("rajnikanth")
+            .searchFollowers()
+            .unableToFetchFollowers()
+
+        //when
+        viewRenderer.render(unknownErrorModel)
+
+        //then
+        verify(view).enableUserNameField()
+        verify(view).enableSearchButton()
+        verify(view).hideLoading()
+        verify(view).showRetryMessage()
+
+        verifyNoMoreInteractions(view)
+    }
 }

@@ -21,6 +21,11 @@ class UserRepoViewRenderer(
             view.enableSearchButton()
             view.hideLoading()
             view.showFollowers(model.followers)
+        } else if (model.error == UserRepoError.UNKNOWN) {
+            view.enableUserNameField()
+            view.enableSearchButton()
+            view.hideLoading()
+            view.showRetryMessage()
         } else if (model.error == UserRepoError.USER_NOT_FOUND) {
             view.enableUserNameField()
             view.enableSearchButton()
