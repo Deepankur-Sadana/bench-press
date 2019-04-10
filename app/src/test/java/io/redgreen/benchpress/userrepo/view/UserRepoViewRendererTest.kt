@@ -39,4 +39,25 @@ class UserRepoViewRendererTest {
 
         verifyNoMoreInteractions(view)
     }
+
+    @Test
+    fun `it can render loading state`() {
+        val loadingModel = UserRepoModel.BLANK
+            .userNameChanged("deepankur")
+            .searchFollowers()
+
+        //when
+        viewRenderer.render(loadingModel)
+
+        //then
+        verify(view).showLoading()
+        verify(view).disableSearchButton()
+        verify(view).disableUserNameField()
+        verify(view).hideFollowers()
+        verify(view).hideNoFollowersMessage()
+        verify(view).hideUserNotFoundMessage()
+        verify(view).hideRetryMessage()
+
+        verifyNoMoreInteractions(view)
+    }
 }
