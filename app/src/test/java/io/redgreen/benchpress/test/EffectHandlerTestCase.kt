@@ -7,8 +7,7 @@ class EffectHandlerTestCase<F, E>(
     effectHandler: ObservableTransformer<F, E>
 ) {
   private val incomingEffectsSubject = PublishSubject.create<F>()
-  private val effectHandlerObservable = incomingEffectsSubject.compose(effectHandler)
-  private val outgoingEffectsTestObserver = effectHandlerObservable.test()
+  private val outgoingEffectsTestObserver = incomingEffectsSubject.compose(effectHandler).test()
 
   fun dispatchEffect(effect: F) {
     incomingEffectsSubject.onNext(effect)
