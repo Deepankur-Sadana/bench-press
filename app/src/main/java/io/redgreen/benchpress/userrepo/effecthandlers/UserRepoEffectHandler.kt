@@ -4,10 +4,7 @@ import com.spotify.mobius.rx2.RxMobius
 import io.reactivex.Observable
 import io.reactivex.ObservableSource
 import io.reactivex.ObservableTransformer
-import io.redgreen.benchpress.userrepo.FollowersFetchedEvent
-import io.redgreen.benchpress.userrepo.SearchFollowersEffect
-import io.redgreen.benchpress.userrepo.UserRepoEffect
-import io.redgreen.benchpress.userrepo.UserRepoEvent
+import io.redgreen.benchpress.userrepo.*
 import io.redgreen.benchpress.userrepo.http.GitHubApi
 
 object UserRepoEffectHandler {
@@ -29,7 +26,7 @@ object UserRepoEffectHandler {
             ): ObservableSource<UserRepoEvent> {
                 return searchFollowersEffects
                     .flatMapSingle { searchFollowersEffect -> gitHubApi.fetchFollowers(searchFollowersEffect.userName) }
-                    .map { followers -> FollowersFetchedEvent(followers) }
+                    .map { followers -> if(followers.isEmpty()) NoFollowersFoundEvent else FollowersFetchedEvent(followers) }
             }
         }
     }
