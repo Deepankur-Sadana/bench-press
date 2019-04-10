@@ -4,10 +4,7 @@ import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.Single
 import io.redgreen.benchpress.test.EffectHandlerTestCase
-import io.redgreen.benchpress.userrepo.FollowersFetchedEvent
-import io.redgreen.benchpress.userrepo.NoFollowersFoundEvent
-import io.redgreen.benchpress.userrepo.SearchFollowersEffect
-import io.redgreen.benchpress.userrepo.User
+import io.redgreen.benchpress.userrepo.*
 import io.redgreen.benchpress.userrepo.http.GitHubApi
 import org.junit.Test
 
@@ -45,5 +42,21 @@ class UserRepoEffectHandlerTest {
 
         //then
         testCase.assertOutgoingEvents(NoFollowersFoundEvent)
+    }
+    
+    @Test
+    fun `it can dispatch unable to fetch followers event`() {
+        //given
+        val userName = "Deepankur-Sadana"
+
+        whenever(gitHubApi.fetchFollowers(userName))
+            .thenReturn(Single.error(Exception("Act fibrenet on vacation")))
+
+        //when
+        testCase.dispatchEffect(SearchFollowersEffect(userName))
+
+        //then
+        testCase.assertOutgoingEvents(UnableToFetchFollowersEvent)
+
     }
 }

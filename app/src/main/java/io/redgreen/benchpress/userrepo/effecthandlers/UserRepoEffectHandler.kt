@@ -27,6 +27,7 @@ object UserRepoEffectHandler {
                 return searchFollowersEffects
                     .flatMapSingle { searchFollowersEffect -> gitHubApi.fetchFollowers(searchFollowersEffect.userName) }
                     .map { followers -> if(followers.isEmpty()) NoFollowersFoundEvent else FollowersFetchedEvent(followers) }
+                    .onErrorReturn { UnableToFetchFollowersEvent }
             }
         }
     }
