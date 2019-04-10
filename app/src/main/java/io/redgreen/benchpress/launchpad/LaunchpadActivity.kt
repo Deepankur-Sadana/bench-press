@@ -12,12 +12,14 @@ import io.redgreen.benchpress.hellostranger.HelloStrangerActivity
 import io.redgreen.benchpress.imagepicker.ImagePickerActivity
 import io.redgreen.benchpress.login.LoginActivity
 import io.redgreen.benchpress.quiz.QuizActivity
+import io.redgreen.benchpress.userrepo.UserFollowersActivity
 import kotlinx.android.synthetic.main.launchpad_activity.*
 import kotlin.LazyThreadSafetyMode.NONE
 
 class LaunchpadActivity : AppCompatActivity() {
   private val examples by lazy(NONE) {
     listOf(
+      Example("GitHub Followers") { context -> UserFollowersActivity.start(context) },
       Example(getString(R.string.counter_title)) { context -> CounterActivity.start(context) },
       Example(getString(R.string.hello_stranger_title)) { context -> HelloStrangerActivity.start(context) },
       Example(getString(R.string.bmi_title)) { context -> BmiActivity.start(context) },

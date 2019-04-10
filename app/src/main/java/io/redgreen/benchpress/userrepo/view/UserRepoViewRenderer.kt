@@ -60,7 +60,7 @@ class UserRepoViewRenderer(
         view.enableUserNameField()
         view.enableSearchButton()
         view.hideLoading()
-        view.shoNoFollowersFoundMessage()
+        view.showNoFollowersFoundMessage()
     }
 
     private fun renderBlank() {

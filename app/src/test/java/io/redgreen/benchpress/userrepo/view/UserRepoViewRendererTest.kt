@@ -99,7 +99,7 @@ class UserRepoViewRendererTest {
         verify(view).enableUserNameField()
         verify(view).enableSearchButton()
         verify(view).hideLoading()
-        verify(view).shoNoFollowersFoundMessage()
+        verify(view).showNoFollowersFoundMessage()
 
         verifyNoMoreInteractions(view)
     }

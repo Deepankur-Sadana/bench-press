@@ -32,10 +32,12 @@ object UserRepoEffectHandler {
                 searchFollowersEffects: Observable<SearchFollowersEffect>
             ): ObservableSource<UserRepoEvent> {
                 return searchFollowersEffects
-                    .flatMapSingle { searchFollowersEffect -> gitHubApi.fetchFollowers(searchFollowersEffect.userName) }
+                    .flatMapSingle { searchFollowersEffect -> gitHubApi
+                        .fetchFollowers(searchFollowersEffect.userName)
+                        .map(::mapToFollowersEvent)
+                        .onErrorReturn { mapToErrorEvent(it) }
+                    }
                     .subscribeOn(schedulersProvider.io)
-                    .map(::mapToFollowersEvent)
-                    .onErrorReturn(::mapToErrorEvent)
             }
         }
     }
