@@ -4,6 +4,7 @@ import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.Single
 import io.redgreen.benchpress.test.EffectHandlerTestCase
+import io.redgreen.benchpress.test.ImmediateSchedulersProvider
 import io.redgreen.benchpress.userrepo.*
 import io.redgreen.benchpress.userrepo.http.GitHubApi
 import okhttp3.MediaType
@@ -14,7 +15,7 @@ import retrofit2.Response
 
 class UserRepoEffectHandlerTest {
     private val gitHubApi = mock<GitHubApi>()
-    private val testCase = EffectHandlerTestCase(UserRepoEffectHandler.create(gitHubApi))
+    private val testCase = EffectHandlerTestCase(UserRepoEffectHandler.create(gitHubApi, ImmediateSchedulersProvider()))
 
     @Test
     fun `it can dispatch followers fetched event`() {

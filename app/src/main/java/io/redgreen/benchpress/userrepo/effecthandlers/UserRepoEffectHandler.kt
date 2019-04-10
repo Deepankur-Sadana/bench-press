@@ -4,22 +4,28 @@ import com.spotify.mobius.rx2.RxMobius
 import io.reactivex.Observable
 import io.reactivex.ObservableSource
 import io.reactivex.ObservableTransformer
+import io.redgreen.benchpress.architecture.threading.SchedulersProvider
 import io.redgreen.benchpress.userrepo.*
 import io.redgreen.benchpress.userrepo.http.GitHubApi
 import retrofit2.HttpException
 
 object UserRepoEffectHandler {
     fun create(
-        gitHubApi: GitHubApi
+        gitHubApi: GitHubApi,
+        schedulersProvider: SchedulersProvider
     ): ObservableTransformer<UserRepoEffect, UserRepoEvent> {
         return RxMobius
             .subtypeEffectHandler<UserRepoEffect, UserRepoEvent>()
-            .addTransformer(SearchFollowersEffect::class.java, makeFetchFollowersApiCall(gitHubApi))
+            .addTransformer(
+                SearchFollowersEffect::class.java,
+                makeFetchFollowersApiCall(gitHubApi, schedulersProvider)
+            )
             .build()
     }
 
     private fun makeFetchFollowersApiCall(
-        gitHubApi: GitHubApi
+        gitHubApi: GitHubApi,
+        schedulersProvider: SchedulersProvider
     ): ObservableTransformer<SearchFollowersEffect, UserRepoEvent> {
         return object : ObservableTransformer<SearchFollowersEffect, UserRepoEvent> {
             override fun apply(
@@ -27,6 +33,7 @@ object UserRepoEffectHandler {
             ): ObservableSource<UserRepoEvent> {
                 return searchFollowersEffects
                     .flatMapSingle { searchFollowersEffect -> gitHubApi.fetchFollowers(searchFollowersEffect.userName) }
+                    .subscribeOn(schedulersProvider.io)
                     .map(::mapToFollowersEvent)
                     .onErrorReturn(::mapToErrorEvent)
             }
