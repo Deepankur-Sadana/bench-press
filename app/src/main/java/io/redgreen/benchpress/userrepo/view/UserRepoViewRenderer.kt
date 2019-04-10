@@ -20,6 +20,11 @@ class UserRepoViewRenderer(
             view.enableSearchButton()
             view.hideLoading()
             view.showFollowers(model.followers)
+        } else if (model.searchFollowersAsyncOp == AsyncOp.SUCCEEDED && model.followers.isEmpty()) {
+            view.enableUserNameField()
+            view.enableSearchButton()
+            view.hideLoading()
+            view.shoNoFollowersFoundMessage()
         } else if (model == UserRepoModel.BLANK) {
             view.disableSearchButton()
             view.showBlankMessage()

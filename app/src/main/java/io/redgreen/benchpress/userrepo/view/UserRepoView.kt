@@ -15,4 +15,5 @@ interface UserRepoView {
     fun enableUserNameField()
     fun hideLoading()
     fun showFollowers(followers: List<User>)
+    fun shoNoFollowersFoundMessage()
 }
