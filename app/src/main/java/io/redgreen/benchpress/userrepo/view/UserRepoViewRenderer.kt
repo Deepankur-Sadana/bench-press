@@ -9,38 +9,62 @@ class UserRepoViewRenderer(
 ) {
     fun render(model: UserRepoModel) {
         if (model.searchFollowersAsyncOp == AsyncOp.IN_FLIGHT) {
-            view.showLoading()
-            view.disableSearchButton()
-            view.disableUserNameField()
-            view.hideFollowers()
-            view.hideNoFollowersMessage()
-            view.hideUserNotFoundMessage()
-            view.hideRetryMessage()
+            renderLoading()
         } else if (model.searchFollowersAsyncOp == AsyncOp.SUCCEEDED && model.followers.isNotEmpty()) {
-            view.enableUserNameField()
-            view.enableSearchButton()
-            view.hideLoading()
-            view.showFollowers(model.followers)
+            renderFollowers(model)
         } else if (model.error == UserRepoError.UNKNOWN) {
-            view.enableUserNameField()
-            view.enableSearchButton()
-            view.hideLoading()
-            view.showRetryMessage()
+            renderUnknownError()
         } else if (model.error == UserRepoError.USER_NOT_FOUND) {
-            view.enableUserNameField()
-            view.enableSearchButton()
-            view.hideLoading()
-            view.showUserNotFoundMessage()
+            renderUserNotFound()
         } else if (model.searchFollowersAsyncOp == AsyncOp.SUCCEEDED && model.followers.isEmpty()) {
-            view.enableUserNameField()
-            view.enableSearchButton()
-            view.hideLoading()
-            view.shoNoFollowersFoundMessage()
+            renderNoFollowersFound()
         } else if (model == UserRepoModel.BLANK) {
-            view.disableSearchButton()
-            view.showBlankMessage()
+            renderBlank()
         } else if (model.isReadyToSearch) {
             view.enableSearchButton()
         }
+    }
+
+    private fun renderLoading() {
+        view.showLoading()
+        view.disableSearchButton()
+        view.disableUserNameField()
+        view.hideFollowers()
+        view.hideNoFollowersMessage()
+        view.hideUserNotFoundMessage()
+        view.hideRetryMessage()
+    }
+
+    private fun renderFollowers(model: UserRepoModel) {
+        view.enableUserNameField()
+        view.enableSearchButton()
+        view.hideLoading()
+        view.showFollowers(model.followers)
+    }
+
+    private fun renderUnknownError() {
+        view.enableUserNameField()
+        view.enableSearchButton()
+        view.hideLoading()
+        view.showRetryMessage()
+    }
+
+    private fun renderUserNotFound() {
+        view.enableUserNameField()
+        view.enableSearchButton()
+        view.hideLoading()
+        view.showUserNotFoundMessage()
+    }
+
+    private fun renderNoFollowersFound() {
+        view.enableUserNameField()
+        view.enableSearchButton()
+        view.hideLoading()
+        view.shoNoFollowersFoundMessage()
+    }
+
+    private fun renderBlank() {
+        view.disableSearchButton()
+        view.showBlankMessage()
     }
 }
