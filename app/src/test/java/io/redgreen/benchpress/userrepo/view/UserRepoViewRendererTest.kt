@@ -3,6 +3,7 @@ package io.redgreen.benchpress.userrepo.view
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
+import io.redgreen.benchpress.userrepo.User
 import io.redgreen.benchpress.userrepo.UserRepoModel
 import org.junit.Test
 
@@ -42,6 +43,7 @@ class UserRepoViewRendererTest {
 
     @Test
     fun `it can render loading state`() {
+        // given
         val loadingModel = UserRepoModel.BLANK
             .userNameChanged("deepankur")
             .searchFollowers()
@@ -57,6 +59,27 @@ class UserRepoViewRendererTest {
         verify(view).hideNoFollowersMessage()
         verify(view).hideUserNotFoundMessage()
         verify(view).hideRetryMessage()
+
+        verifyNoMoreInteractions(view)
+    }
+
+    @Test
+    fun `it can render has followers state`() {
+        // given
+        val followers = listOf(User("deepankur", "some-avatar-url"))
+        val followersListFetchedModel = UserRepoModel.BLANK
+            .userNameChanged("somename")
+            .searchFollowers()
+            .followersListFetched(followers)
+
+        //when
+        viewRenderer.render(followersListFetchedModel)
+
+        //then
+        verify(view).enableUserNameField()
+        verify(view).enableSearchButton()
+        verify(view).hideLoading()
+        verify(view).showFollowers(followers)
 
         verifyNoMoreInteractions(view)
     }

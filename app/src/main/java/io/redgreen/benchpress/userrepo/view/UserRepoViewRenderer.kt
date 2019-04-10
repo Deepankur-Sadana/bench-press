@@ -15,6 +15,11 @@ class UserRepoViewRenderer(
             view.hideNoFollowersMessage()
             view.hideUserNotFoundMessage()
             view.hideRetryMessage()
+        } else if (model.searchFollowersAsyncOp == AsyncOp.SUCCEEDED && model.followers.isNotEmpty()) {
+            view.enableUserNameField()
+            view.enableSearchButton()
+            view.hideLoading()
+            view.showFollowers(model.followers)
         } else if (model == UserRepoModel.BLANK) {
             view.disableSearchButton()
             view.showBlankMessage()
