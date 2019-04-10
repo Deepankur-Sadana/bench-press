@@ -6,6 +6,7 @@ import io.reactivex.ObservableSource
 import io.reactivex.ObservableTransformer
 import io.redgreen.benchpress.userrepo.*
 import io.redgreen.benchpress.userrepo.http.GitHubApi
+import retrofit2.HttpException
 
 object UserRepoEffectHandler {
     fun create(
@@ -26,9 +27,23 @@ object UserRepoEffectHandler {
             ): ObservableSource<UserRepoEvent> {
                 return searchFollowersEffects
                     .flatMapSingle { searchFollowersEffect -> gitHubApi.fetchFollowers(searchFollowersEffect.userName) }
-                    .map { followers -> if(followers.isEmpty()) NoFollowersFoundEvent else FollowersFetchedEvent(followers) }
-                    .onErrorReturn { UnableToFetchFollowersEvent }
+                    .map(::mapToFollowersEvent)
+                    .onErrorReturn(::mapToErrorEvent)
             }
         }
     }
+
+    private fun mapToFollowersEvent(followers: List<User>): UserRepoEvent =
+        if (followers.isEmpty()) {
+            NoFollowersFoundEvent
+        } else FollowersFetchedEvent(
+            followers
+        )
+
+    private fun mapToErrorEvent(throwable: Throwable): UserRepoEvent =
+        if (throwable is HttpException && throwable.code() == 404) {
+            UserNotFoundEvent
+        } else {
+            UnableToFetchFollowersEvent
+        }
 }
