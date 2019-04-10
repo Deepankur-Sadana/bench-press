@@ -86,6 +86,7 @@ class UserRepoViewRendererTest {
 
     @Test
     fun `it can render no followers state`() {
+        //given
         val noFollowersFoundModel = UserRepoModel.BLANK
             .userNameChanged("whats in a name")
             .searchFollowers()
@@ -101,5 +102,26 @@ class UserRepoViewRendererTest {
         verify(view).shoNoFollowersFoundMessage()
 
         verifyNoMoreInteractions(view)
+    }
+
+    @Test
+    fun `it can render no user found state`() {
+        // given
+        val userNotFoundModel = UserRepoModel.BLANK
+            .userNameChanged("phantom")
+            .searchFollowers()
+            .userNotFound()
+
+        //when
+        viewRenderer.render(userNotFoundModel)
+
+        //then
+        verify(view).enableUserNameField()
+        verify(view).enableSearchButton()
+        verify(view).hideLoading()
+        verify(view).showUserNotFoundMessage()
+
+        verifyNoMoreInteractions(view)
+
     }
 }

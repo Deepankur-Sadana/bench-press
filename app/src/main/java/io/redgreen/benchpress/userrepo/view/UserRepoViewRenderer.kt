@@ -1,6 +1,7 @@
 package io.redgreen.benchpress.userrepo.view
 
 import io.redgreen.benchpress.architecture.AsyncOp
+import io.redgreen.benchpress.userrepo.UserRepoError
 import io.redgreen.benchpress.userrepo.UserRepoModel
 
 class UserRepoViewRenderer(
@@ -20,6 +21,11 @@ class UserRepoViewRenderer(
             view.enableSearchButton()
             view.hideLoading()
             view.showFollowers(model.followers)
+        } else if (model.error == UserRepoError.USER_NOT_FOUND) {
+            view.enableUserNameField()
+            view.enableSearchButton()
+            view.hideLoading()
+            view.showUserNotFoundMessage()
         } else if (model.searchFollowersAsyncOp == AsyncOp.SUCCEEDED && model.followers.isEmpty()) {
             view.enableUserNameField()
             view.enableSearchButton()
