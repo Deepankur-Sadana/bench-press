@@ -19,7 +19,8 @@ import io.redgreen.benchpress.userrepo.view.UserRepoViewRenderer
 import kotlinx.android.synthetic.main.activity_user_followers.*
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
-import okhttp3.logging.HttpLoggingInterceptor.Level.BASIC
+import okhttp3.logging.HttpLoggingInterceptor.Level.BODY
+import okhttp3.logging.HttpLoggingInterceptor.Level.HEADERS
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.moshi.MoshiConverterFactory
@@ -39,7 +40,7 @@ class UserFollowersActivity : BaseActivity<UserRepoModel, UserRepoEvent, UserRep
     private val gitHubApi by lazy(NONE) {
         val okHttpClient = OkHttpClient
             .Builder()
-            .addInterceptor(HttpLoggingInterceptor().setLevel(BASIC))
+            .addInterceptor(HttpLoggingInterceptor().setLevel(BODY))
             .build()
 
         return@lazy Retrofit
