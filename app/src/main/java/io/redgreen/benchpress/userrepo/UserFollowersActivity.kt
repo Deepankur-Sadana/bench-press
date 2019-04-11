@@ -7,18 +7,16 @@ import android.text.Editable
 import android.view.View
 import com.spotify.mobius.Next
 import io.reactivex.ObservableTransformer
-import io.reactivex.Single
 import io.redgreen.benchpress.R
 import io.redgreen.benchpress.architecture.android.BaseActivity
 import io.redgreen.benchpress.architecture.android.listener.TextWatcherAdapter
 import io.redgreen.benchpress.architecture.threading.DefaultSchedulersProvider
 import io.redgreen.benchpress.userrepo.effecthandlers.UserRepoEffectHandler
-import io.redgreen.benchpress.userrepo.http.GitHubApi
+import io.redgreen.benchpress.userrepo.http.StubGitHubApi
 import io.redgreen.benchpress.userrepo.view.FollowersAdapter
 import io.redgreen.benchpress.userrepo.view.UserRepoView
 import io.redgreen.benchpress.userrepo.view.UserRepoViewRenderer
 import kotlinx.android.synthetic.main.activity_user_followers.*
-import java.util.concurrent.TimeUnit
 import kotlin.LazyThreadSafetyMode.NONE
 
 class UserFollowersActivity : BaseActivity<UserRepoModel, UserRepoEvent, UserRepoEffect>(), UserRepoView {
@@ -33,13 +31,7 @@ class UserFollowersActivity : BaseActivity<UserRepoModel, UserRepoEvent, UserRep
     }
 
     private val gitHubApi by lazy(NONE) {
-        object : GitHubApi {
-            override fun fetchFollowers(userName: String): Single<List<User>> {
-                return Single
-                    .error<List<User>>(RuntimeException("Mayday, Mayday!"))
-                    .delay(3000, TimeUnit.MILLISECONDS)
-            }
-        }
+        StubGitHubApi()
     }
 
     override fun layoutResId(): Int {
