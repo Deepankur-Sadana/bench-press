@@ -12,11 +12,17 @@ import io.redgreen.benchpress.architecture.android.BaseActivity
 import io.redgreen.benchpress.architecture.android.listener.TextWatcherAdapter
 import io.redgreen.benchpress.architecture.threading.DefaultSchedulersProvider
 import io.redgreen.benchpress.userrepo.effecthandlers.UserRepoEffectHandler
-import io.redgreen.benchpress.userrepo.http.StubGitHubApi
+import io.redgreen.benchpress.userrepo.http.GitHubApi
 import io.redgreen.benchpress.userrepo.view.FollowersAdapter
 import io.redgreen.benchpress.userrepo.view.UserRepoView
 import io.redgreen.benchpress.userrepo.view.UserRepoViewRenderer
 import kotlinx.android.synthetic.main.activity_user_followers.*
+import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
+import okhttp3.logging.HttpLoggingInterceptor.Level.BASIC
+import retrofit2.Retrofit
+import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
+import retrofit2.converter.moshi.MoshiConverterFactory
 import kotlin.LazyThreadSafetyMode.NONE
 
 class UserFollowersActivity : BaseActivity<UserRepoModel, UserRepoEvent, UserRepoEffect>(), UserRepoView {
@@ -31,7 +37,19 @@ class UserFollowersActivity : BaseActivity<UserRepoModel, UserRepoEvent, UserRep
     }
 
     private val gitHubApi by lazy(NONE) {
-        StubGitHubApi()
+        val okHttpClient = OkHttpClient
+            .Builder()
+            .addInterceptor(HttpLoggingInterceptor().setLevel(BASIC))
+            .build()
+
+        return@lazy Retrofit
+            .Builder()
+            .client(okHttpClient)
+            .addConverterFactory(MoshiConverterFactory.create())
+            .addCallAdapterFactory(RxJava2CallAdapterFactory.createWithScheduler(DefaultSchedulersProvider().io))
+            .baseUrl("https://api.github.com/")
+            .build()
+            .create(GitHubApi::class.java)
     }
 
     override fun layoutResId(): Int {

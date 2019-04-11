@@ -24,6 +24,11 @@ android {
       proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
     }
   }
+
+  compileOptions {
+    sourceCompatibility JavaVersion.VERSION_1_8
+    targetCompatibility JavaVersion.VERSION_1_8
+  }
 }
 
 androidExtensions {
@@ -50,6 +55,9 @@ dependencies {
 
   // Retrofit
   implementation "com.squareup.retrofit2:retrofit:2.5.0"
+  implementation "com.squareup.retrofit2:adapter-rxjava2:2.5.0"
+  implementation 'com.squareup.retrofit2:converter-moshi:2.5.0'
+  implementation 'com.squareup.okhttp3:logging-interceptor:3.14.1'
 
   // Rx
   implementation "io.reactivex.rxjava2:rxjava:2.2.5"

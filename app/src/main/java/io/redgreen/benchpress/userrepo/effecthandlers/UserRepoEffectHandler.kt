@@ -8,6 +8,7 @@ import io.redgreen.benchpress.architecture.threading.SchedulersProvider
 import io.redgreen.benchpress.userrepo.*
 import io.redgreen.benchpress.userrepo.http.GitHubApi
 import retrofit2.HttpException
+import timber.log.Timber
 
 object UserRepoEffectHandler {
     fun create(
@@ -35,6 +36,7 @@ object UserRepoEffectHandler {
                     .flatMapSingle { searchFollowersEffect -> gitHubApi
                         .fetchFollowers(searchFollowersEffect.userName)
                         .map(::mapToFollowersEvent)
+                        .doOnError(Timber::e)
                         .onErrorReturn { mapToErrorEvent(it) }
                     }
                     .subscribeOn(schedulersProvider.io)
