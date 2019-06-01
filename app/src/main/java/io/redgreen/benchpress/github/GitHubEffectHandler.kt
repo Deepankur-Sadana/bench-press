@@ -7,7 +7,6 @@ import io.reactivex.ObservableTransformer
 import io.redgreen.benchpress.architecture.threading.SchedulersProvider
 import io.redgreen.benchpress.github.http.BadRequestError
 import io.redgreen.benchpress.github.http.FollowersApi
-import io.redgreen.benchpress.userrepo.effecthandlers.UserRepoEffectHandler
 import retrofit2.HttpException
 import timber.log.Timber
 
@@ -55,11 +54,10 @@ object GitHubEffectHandler {
         }
 
 
+    private fun mapToErrorEvent(throwable: Throwable): GitHubEvent = when {
+        throwable is HttpException && throwable.code() == 401 -> BadRequestEvent(BadRequestError.UNAUTHENTICATED)
+        else -> BadRequestEvent(BadRequestError.UNAUTHORIZED)
+    }
 
-    private fun mapToErrorEvent(throwable: Throwable): GitHubEvent =
-        BadRequestEvent(BadRequestError.UNAUTHENTICATED)
-
-//    if (throwable is HttpException && throwable.code() == 401) {
-//        }
 
 }

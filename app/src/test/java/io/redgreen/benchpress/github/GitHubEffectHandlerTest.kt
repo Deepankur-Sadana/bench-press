@@ -52,14 +52,7 @@ class GitHubEffectHandlerTest {
 
     @Test
     fun `when api returns 401 error code, then dispatch  Bad request event`() {
-
-        val userNotAuthenticatedContent = """
-            {
-                "message": "Not Found",
-                "documentation_url": "https://developer.github.com/v3/users/followers/#list-followers-of-a-user"
-            }
-        """.trimIndent()
-
+        val userNotAuthenticatedContent = getErrorContent()
 
         val userNotAuthenticatedError = Response.error<Any>(
             401,
@@ -72,12 +65,44 @@ class GitHubEffectHandlerTest {
         whenever(followersApi.fetchFollowers(userName))
             .thenReturn(Single.error(HttpException(userNotAuthenticatedError)))
 
-        //when
+        // when
         testCase.dispatchEffect(FindFollowersEffect(userName))
 
-        //then
+        // then
         testCase.assertOutgoingEvents(BadRequestEvent(BadRequestError.UNAUTHENTICATED))
 
+    }
 
+    @Test
+    fun `when api return 403 error code, then dispatch Bad Request event`() {
+        val userNotAuthorizedContent = getErrorContent()
+
+        val userNotAuthorizedError = Response.error<Any>(
+            403,
+            ResponseBody.create(
+                MediaType.parse("application/json"),
+                userNotAuthorizedContent
+            )
+        )
+
+        whenever(followersApi.fetchFollowers(userName))
+            .thenReturn(Single.error(HttpException(userNotAuthorizedError)))
+
+        // when
+        testCase.dispatchEffect(FindFollowersEffect(userName))
+
+        // then
+        testCase.assertOutgoingEvents(BadRequestEvent(BadRequestError.UNAUTHORIZED))
+    }
+
+
+    private fun getErrorContent(): String {
+        val userNotAuthenticatedContent = """
+                {
+                    "message": "Not Found",
+                    "documentation_url": "https://developer.github.com/v3/users/followers/#list-followers-of-a-user"
+                }
+            """.trimIndent()
+        return userNotAuthenticatedContent
     }
 }
