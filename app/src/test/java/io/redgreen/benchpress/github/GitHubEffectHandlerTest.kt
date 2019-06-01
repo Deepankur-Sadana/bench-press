@@ -52,7 +52,7 @@ class GitHubEffectHandlerTest {
 
     @Test
     fun `when user in un authenticated, then dispatch  Bad request event`() {
-        val userNotAuthenticatedContent = getErrorContent()
+        val userNotAuthenticatedContent = getErrorContent("unAuthenticated user")
 
         val userNotAuthenticatedError = Response.error<Any>(
             401,
@@ -75,7 +75,7 @@ class GitHubEffectHandlerTest {
 
     @Test
     fun `when user is unauthorized, then dispatch Bad Request event`() {
-        val userNotAuthorizedContent = getErrorContent()
+        val userNotAuthorizedContent = getErrorContent("unAuthorized user")
 
         val userNotAuthorizedError = Response.error<Any>(
             403,
@@ -95,12 +95,10 @@ class GitHubEffectHandlerTest {
         testCase.assertOutgoingEvents(BadRequestEvent(BadRequestError.UNAUTHORIZED))
     }
 
-
-
     @Test
     fun `when user is not found, then dispatch`() {
 
-        val userNotFoundContent = getErrorContent()
+        val userNotFoundContent = getErrorContent("User not found")
 
         val userNotFoundError = Response.error<Any>(
             404,
@@ -121,10 +119,11 @@ class GitHubEffectHandlerTest {
         testCase.assertOutgoingEvents(BadRequestEvent(BadRequestError.NOT_FOUND))
 
     }
-    private fun getErrorContent(): String {
+
+    private fun getErrorContent(error: String): String {
         val userNotAuthenticatedContent = """
                 {
-                    "message": "Not Found",
+                    "message": $error,
                     "documentation_url": "https://developer.github.com/v3/users/followers/#list-followers-of-a-user"
                 }
             """.trimIndent()

@@ -56,8 +56,9 @@ object GitHubEffectHandler {
 
     private fun mapToErrorEvent(throwable: Throwable): GitHubEvent = when {
         throwable is HttpException && throwable.code() == 401 -> BadRequestEvent(BadRequestError.UNAUTHENTICATED)
+        throwable is HttpException && throwable.code() == 403 -> BadRequestEvent(BadRequestError.UNAUTHORIZED)
         throwable is HttpException && throwable.code() == 404 -> BadRequestEvent(BadRequestError.NOT_FOUND)
-        else -> BadRequestEvent(BadRequestError.UNAUTHORIZED)
+        else -> TODO("unsupported event $throwable")
     }
 
 
