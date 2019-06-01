@@ -5,7 +5,10 @@ import io.reactivex.Observable
 import io.reactivex.ObservableSource
 import io.reactivex.ObservableTransformer
 import io.redgreen.benchpress.architecture.threading.SchedulersProvider
+import io.redgreen.benchpress.github.http.BadRequestError
 import io.redgreen.benchpress.github.http.FollowersApi
+import io.redgreen.benchpress.userrepo.effecthandlers.UserRepoEffectHandler
+import retrofit2.HttpException
 import timber.log.Timber
 
 object GitHubEffectHandler {
@@ -36,7 +39,7 @@ object GitHubEffectHandler {
                             .fetchFollowers(searchFollowersEffect.userName)
                             .map(::mapToFollowersEvent)
                             .doOnError(Timber::e)
-                            .onErrorReturn { null }
+                            .onErrorReturn { mapToErrorEvent(it) }
                     }
                     .subscribeOn(schedulersProvider.io)
             }
@@ -45,8 +48,18 @@ object GitHubEffectHandler {
 
 
     private fun mapToFollowersEvent(followers: List<Follower>): GitHubEvent =
-        HasFollowersEvent(
-            followers
-        )
+
+        when {
+            followers.isEmpty() -> HasNoFollowerFoundEvent
+            else -> HasFollowersEvent(followers)
+        }
+
+
+
+    private fun mapToErrorEvent(throwable: Throwable): GitHubEvent =
+        BadRequestEvent(BadRequestError.UNAUTHENTICATED)
+
+//    if (throwable is HttpException && throwable.code() == 401) {
+//        }
 
 }
