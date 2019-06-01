@@ -51,7 +51,7 @@ class GitHubEffectHandlerTest {
     }
 
     @Test
-    fun `when api returns 401 error code, then dispatch  Bad request event`() {
+    fun `when user in un authenticated, then dispatch  Bad request event`() {
         val userNotAuthenticatedContent = getErrorContent()
 
         val userNotAuthenticatedError = Response.error<Any>(
@@ -74,7 +74,7 @@ class GitHubEffectHandlerTest {
     }
 
     @Test
-    fun `when api return 403 error code, then dispatch Bad Request event`() {
+    fun `when user is unauthorized, then dispatch Bad Request event`() {
         val userNotAuthorizedContent = getErrorContent()
 
         val userNotAuthorizedError = Response.error<Any>(
@@ -96,6 +96,31 @@ class GitHubEffectHandlerTest {
     }
 
 
+
+    @Test
+    fun `when user is not found, then dispatch`() {
+
+        val userNotFoundContent = getErrorContent()
+
+        val userNotFoundError = Response.error<Any>(
+            404,
+            ResponseBody.create(
+                MediaType.parse("application/json"),
+                userNotFoundContent
+            )
+        )
+
+
+        whenever(followersApi.fetchFollowers(userName))
+            .thenReturn(Single.error(HttpException(userNotFoundError)))
+
+        //when
+        testCase.dispatchEffect(FindFollowersEffect(userName))
+
+        //then
+        testCase.assertOutgoingEvents(BadRequestEvent(BadRequestError.NOT_FOUND))
+
+    }
     private fun getErrorContent(): String {
         val userNotAuthenticatedContent = """
                 {
