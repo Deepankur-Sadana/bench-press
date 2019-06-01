@@ -12,6 +12,7 @@ import okhttp3.ResponseBody
 import org.junit.Test
 import retrofit2.HttpException
 import retrofit2.Response
+import java.util.concurrent.TimeoutException
 
 class GitHubEffectHandlerTest {
 
@@ -97,7 +98,6 @@ class GitHubEffectHandlerTest {
 
     @Test
     fun `when user is not found, then dispatch`() {
-
         val userNotFoundContent = getErrorContent("User not found")
 
         val userNotFoundError = Response.error<Any>(
@@ -117,6 +117,21 @@ class GitHubEffectHandlerTest {
 
         //then
         testCase.assertOutgoingEvents(BadRequestEvent(BadRequestError.NOT_FOUND))
+
+    }
+
+    @Test
+    fun `when fetching followers failed, then dispatch FetchFollower failed event`() {
+        // given
+        whenever(followersApi.fetchFollowers(userName))
+            .thenReturn(Single.error(Exception()))
+
+        //when
+        testCase.dispatchEffect(FindFollowersEffect(userName))
+
+        //then
+        testCase.assertOutgoingEvents(FindFollowersFailedEvent)
+
 
     }
 

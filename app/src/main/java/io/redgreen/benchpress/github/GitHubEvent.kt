@@ -12,4 +12,6 @@ object HasNoFollowerFoundEvent : GitHubEvent()
 
 data class BadRequestEvent(val badRequestError: BadRequestError):GitHubEvent()
 
+object FindFollowersFailedEvent : GitHubEvent()
+
 
