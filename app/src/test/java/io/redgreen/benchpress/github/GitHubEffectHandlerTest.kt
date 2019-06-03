@@ -3,7 +3,7 @@ package io.redgreen.benchpress.github
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.Single
-import io.redgreen.benchpress.github.http.BadRequestError
+import io.redgreen.benchpress.github.http.FailureType
 import io.redgreen.benchpress.github.http.FollowersApi
 import io.redgreen.benchpress.test.EffectHandlerTestCase
 import io.redgreen.benchpress.test.ImmediateSchedulersProvider
@@ -12,10 +12,8 @@ import okhttp3.ResponseBody
 import org.junit.Test
 import retrofit2.HttpException
 import retrofit2.Response
-import java.util.concurrent.TimeoutException
 
 class GitHubEffectHandlerTest {
-
     private val followersApi = mock<FollowersApi>()
     private val testCase =
         EffectHandlerTestCase(GitHubEffectHandler.create(followersApi, ImmediateSchedulersProvider()))
@@ -28,13 +26,11 @@ class GitHubEffectHandlerTest {
         whenever(followersApi.fetchFollowers(userName))
             .thenReturn(Single.just(followers))
 
-
         // when
         testCase.dispatchEffect(FindFollowersEffect(userName))
 
         // then
         testCase.assertOutgoingEvents(HasFollowersEvent(followers))
-
     }
 
     @Test
@@ -48,7 +44,7 @@ class GitHubEffectHandlerTest {
         testCase.dispatchEffect(FindFollowersEffect(userName))
 
         // then
-        testCase.assertOutgoingEvents(HasNoFollowerFoundEvent)
+        testCase.assertOutgoingEvents(NoFollowersFoundEvent)
     }
 
     @Test
@@ -70,7 +66,7 @@ class GitHubEffectHandlerTest {
         testCase.dispatchEffect(FindFollowersEffect(userName))
 
         // then
-        testCase.assertOutgoingEvents(BadRequestEvent(BadRequestError.UNAUTHENTICATED))
+        testCase.assertOutgoingEvents(FindFollowersFailedEvent(FailureType.UNAUTHENTICATED))
 
     }
 
@@ -93,7 +89,7 @@ class GitHubEffectHandlerTest {
         testCase.dispatchEffect(FindFollowersEffect(userName))
 
         // then
-        testCase.assertOutgoingEvents(BadRequestEvent(BadRequestError.UNAUTHORIZED))
+        testCase.assertOutgoingEvents(FindFollowersFailedEvent(FailureType.UNAUTHORIZED))
     }
 
     @Test
@@ -116,7 +112,7 @@ class GitHubEffectHandlerTest {
         testCase.dispatchEffect(FindFollowersEffect(userName))
 
         //then
-        testCase.assertOutgoingEvents(BadRequestEvent(BadRequestError.NOT_FOUND))
+        testCase.assertOutgoingEvents(FindFollowersFailedEvent(FailureType.NOT_FOUND))
 
     }
 
@@ -130,18 +126,17 @@ class GitHubEffectHandlerTest {
         testCase.dispatchEffect(FindFollowersEffect(userName))
 
         //then
-        testCase.assertOutgoingEvents(FindFollowersFailedEvent)
+        testCase.assertOutgoingEvents(FindFollowersUnknownErrorEvent)
 
 
     }
 
     private fun getErrorContent(error: String): String {
-        val userNotAuthenticatedContent = """
+        return """
                 {
                     "message": $error,
                     "documentation_url": "https://developer.github.com/v3/users/followers/#list-followers-of-a-user"
                 }
             """.trimIndent()
-        return userNotAuthenticatedContent
     }
 }

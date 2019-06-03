@@ -1,6 +1,6 @@
 package io.redgreen.benchpress.github.http
 
-enum class BadRequestError {
+enum class FailureType {
     UNAUTHENTICATED,
     UNAUTHORIZED,
     NOT_FOUND

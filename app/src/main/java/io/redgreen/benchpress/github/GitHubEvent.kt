@@ -1,17 +1,13 @@
 package io.redgreen.benchpress.github
 
-import io.redgreen.benchpress.github.http.BadRequestError
+import io.redgreen.benchpress.github.http.FailureType
 
 sealed class GitHubEvent
 
-
 data class HasFollowersEvent(val followers: List<Follower>) : GitHubEvent()
 
-object HasNoFollowerFoundEvent : GitHubEvent()
+object NoFollowersFoundEvent : GitHubEvent()
 
+data class FindFollowersFailedEvent(val failureType: FailureType) : GitHubEvent()
 
-data class BadRequestEvent(val badRequestError: BadRequestError):GitHubEvent()
-
-object FindFollowersFailedEvent : GitHubEvent()
-
-
+object FindFollowersUnknownErrorEvent : GitHubEvent()
